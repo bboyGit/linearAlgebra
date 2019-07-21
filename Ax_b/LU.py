@@ -1,12 +1,14 @@
 import numpy as np
 
-def LU_decompose(mat, only_upper=False):
+def LU_decompose(mat, only_upper=False, get_elementary=False):
     # Description: This function will achieve the LU decomposition of a given matrix.
     # args:
     #   mat: The matrix prepared to be transformed to upper triangle.
-    #   vectorization: A bool, if it is True, then we use left-multiply matrix to realize row exchange of matrix.
+    #   only_upper: A bool, if it is False, then we use left-multiply matrix to realize row exchange of matrix.
+    #   get_elementary: A bool, if it's True, we'll also return the elementary matrix.
     # return: The upper triangle matrix
 
+    # (1) Catch exceptions and initialize variables
     if not isinstance(mat, type(np.array([1, 2]))):
         raise Exception('mat must be an array')
     if mat.ndim != 2:
@@ -19,17 +21,19 @@ def LU_decompose(mat, only_upper=False):
     upper = upper.astype(float)
     nrow, ncol = mat.shape
     pivot_row, pivot_col = 0, 0
-    L = []
+    L, elementary = [], []
 
+    # (2) Do the Gaussian elimination
     def row_exchange(pivot_row, pivot_col, matrix, only_upper):
 
         if not only_upper:
             pivots = matrix[pivot_row + 1:, [pivot_col]]
             nonZero1th_idx = np.where(pivots != 0)[0][0] + 1
-            E = np.identity(matrix.shape[0])
-            E[[pivot_row, pivot_row + nonZero1th_idx], :] = E[[pivot_row + nonZero1th_idx, pivot_row], :]
-            matrix = E @ matrix
-            L.append(E.T)
+            permutation = np.identity(matrix.shape[0])
+            permutation[[pivot_row, pivot_row + nonZero1th_idx], :] = permutation[[pivot_row + nonZero1th_idx, pivot_row], :]
+            matrix = permutation @ matrix
+            elementary.append(permutation)
+            L.append(permutation.T)
         else:
             pivots = matrix[pivot_row + 1:, [pivot_col]]
             nonZero1th_idx = np.where(pivots != 0)[0][0] + 1
@@ -40,11 +44,12 @@ def LU_decompose(mat, only_upper=False):
     def row_subtract(pivot_row, pivot_col, matrix, only_upper):
 
         if not only_upper:
-            Elementary = np.identity(matrix.shape[0])
+            E = np.identity(matrix.shape[0])
             multiplier = matrix[pivot_row + 1:, [pivot_col]] / matrix[pivot_row, pivot_col]
-            Elementary[pivot_row+1:, [pivot_row]] = - multiplier
-            matrix = Elementary @ matrix
-            inverse_elementary = Elementary
+            E[pivot_row+1:, [pivot_row]] = - multiplier
+            matrix = E @ matrix
+            elementary.append(E)
+            inverse_elementary = E.copy()
             inverse_elementary[pivot_row+1:, [pivot_row]] = multiplier
             L.append(inverse_elementary)
         else:
@@ -61,9 +66,9 @@ def LU_decompose(mat, only_upper=False):
         if pivot_row >= nrow - 1 or pivot_col > ncol - 1:
             break
 
-        if all(upper[pivot_row:, [pivot_col]] == 0):
+        if (np.abs(upper[pivot_row:, [pivot_col]]) < 10**(-10)).all():
             pivot_col += 1
-        elif upper[pivot_row, pivot_col] != 0:
+        elif np.abs(upper[pivot_row, pivot_col]) > 10**(-10):
             upper = row_subtract(pivot_row, pivot_col, upper, only_upper=only_upper)
             pivot_row += 1
             pivot_col += 1
@@ -73,6 +78,7 @@ def LU_decompose(mat, only_upper=False):
             pivot_row += 1
             pivot_col += 1
 
+    # (3) Tidy result
     upper = upper.round(4)
     if only_upper:
         return upper
@@ -81,5 +87,7 @@ def LU_decompose(mat, only_upper=False):
         for i in range(1, len(L)):
             lower = lower @ L[i]
         lower = lower.round(4)
-
-        return {'upper': upper, 'lower': lower}
+        if get_elementary:
+            return {'upper': upper, 'lower': lower, 'elementary': elementary}
+        else:
+            return {'upper': upper, 'lower': lower}
