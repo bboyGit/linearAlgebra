@@ -67,7 +67,6 @@ def LU_decompose(mat, only_upper=False):
             upper = row_subtract(pivot_row, pivot_col, upper, only_upper=only_upper)
             pivot_row += 1
             pivot_col += 1
-        print(upper, pivot_col, pivot_row)
 
     if only_upper:
         return upper
