@@ -7,9 +7,14 @@ def LU_decompose(mat, only_upper=False):
     #   vectorization: A bool, if it is True, then we use left-multiply matrix to realize row exchange of matrix.
     # return: The upper triangle matrix
 
-    if not isinstance(mat, type(np.array([1,2]))):
+    if not isinstance(mat, type(np.array([1, 2]))):
         raise Exception('mat must be an array')
-
+    if mat.ndim != 2:
+        raise Exception('The dimension of array must be 2')
+    if mat.shape[0] < 2:
+        raise Exception('The number of row must larger than 1')
+    if (mat == 0).all():
+        raise Exception('zero matrix is forbidden')
     upper = mat.copy()
     upper = upper.astype(float)
     nrow, ncol = mat.shape
@@ -40,7 +45,7 @@ def LU_decompose(mat, only_upper=False):
             Elementary[pivot_row+1:, [pivot_row]] = - multiplier
             matrix = Elementary @ matrix
             inverse_elementary = Elementary
-            inverse_elementary[pivot_row+1:, [pivot_col]] = multiplier
+            inverse_elementary[pivot_row+1:, [pivot_row]] = multiplier
             L.append(inverse_elementary)
         else:
             multiplier = matrix[pivot_row + 1:, [pivot_col]] / matrix[pivot_row, pivot_col]
@@ -68,11 +73,13 @@ def LU_decompose(mat, only_upper=False):
             pivot_row += 1
             pivot_col += 1
 
+    upper = upper.round(4)
     if only_upper:
         return upper
     else:
         lower = L[0]
         for i in range(1, len(L)):
             lower = lower @ L[i]
+        lower = lower.round(4)
 
         return {'upper': upper, 'lower': lower}
