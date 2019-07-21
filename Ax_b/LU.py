@@ -37,7 +37,7 @@ def LU_decompose(mat, only_upper=False):
         if not only_upper:
             Elementary = np.identity(matrix.shape[0])
             multiplier = matrix[pivot_row + 1:, [pivot_col]] / matrix[pivot_row, pivot_col]
-            Elementary[pivot_row+1:, [pivot_col]] = - multiplier
+            Elementary[pivot_row+1:, [pivot_row]] = - multiplier
             matrix = Elementary @ matrix
             inverse_elementary = Elementary
             inverse_elementary[pivot_row+1:, [pivot_col]] = multiplier
@@ -56,7 +56,7 @@ def LU_decompose(mat, only_upper=False):
         if pivot_row >= nrow - 1 or pivot_col > ncol - 1:
             break
 
-        if all(upper[:, [pivot_col]] == 0):
+        if all(upper[pivot_row:, [pivot_col]] == 0):
             pivot_col += 1
         elif upper[pivot_row, pivot_col] != 0:
             upper = row_subtract(pivot_row, pivot_col, upper, only_upper=only_upper)
@@ -67,6 +67,7 @@ def LU_decompose(mat, only_upper=False):
             upper = row_subtract(pivot_row, pivot_col, upper, only_upper=only_upper)
             pivot_row += 1
             pivot_col += 1
+        print(upper, pivot_col, pivot_row)
 
     if only_upper:
         return upper
@@ -76,22 +77,3 @@ def LU_decompose(mat, only_upper=False):
             lower = lower @ L[i]
 
         return {'upper': upper, 'lower': lower}
-
-
-if __name__ == '__main__':
-
-    from numpy.random import randint
-    print('The first test')
-    mat1 = randint(10**5, size=(3, 1))
-    upper1 = LU_decompose(mat1, only_upper=True)
-    lu1 = LU_decompose(mat1)
-
-    print('The second test')
-    mat2 = np.array([[2, 3, 1], [4, 7, 5], [0, -2, 2]])
-    upper2 = LU_decompose(mat2, only_upper=True)
-    lu2 = LU_decompose(mat2)
-
-    print('The third test')
-    mat3 = randint(10, size=(randint(1000, size=1)[0], randint(1000, size=1)[0]))
-    upper3 = LU_decompose(mat3, only_upper=True)
-    lu3 = LU_decompose(mat3)
