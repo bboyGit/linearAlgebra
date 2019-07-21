@@ -23,26 +23,3 @@ def LDU_decompose(mat):
     upper_new = upper_new.round(4)
 
     return {'lower': lower, 'diag': diag, 'upper_new': upper_new}
-
-if __name__ == '__main__':
-    # print('Input is n by n')
-    # mat1 = np.array([[2, 4, 5], [2, 3, 1], [4, 7, 0]])
-    # ldu1 = LDU_decompose(mat1)
-    # print(ldu1, '\n')
-    #
-    # print('Input is m by n where m < n')
-    # mat2 = np.array([[3, 8, 9, 7], [11, 2, 4, 7], [9, 0, 3, 4]])
-    # ldu2 = LDU_decompose(mat2)
-    # print(ldu2, '\n')
-    #
-    # print('Input is n by m where m < n')
-    # mat3 = mat2.T
-    # ldu3 = LDU_decompose(mat3)
-    # print(ldu3)
-
-    from numpy.random import randint,rand
-    mat = []
-    for i in range(10**4):
-        print(i)
-        mat.append(rand(randint(2, 10, size=1)[0], randint(1, 10, size=1)[0]))
-        lu = LDU_decompose(mat[i])
