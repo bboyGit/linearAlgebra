@@ -1,5 +1,5 @@
 import numpy as np
-from core.Ax_b.LDU import LDU_decompose
+from code.Ax_b.LU import LU_decompose
 
 def det(mat):
     # args:
@@ -9,9 +9,9 @@ def det(mat):
     nrow, ncol = mat.shape
     if nrow != ncol:
         raise Exception('mat is not a square matrix.')
-    ldu = LDU_decompose(mat)
-    d = ldu['diag']
-    Det = d.diagonal().cumprod()[-1]
+    lu = LU_decompose(mat)
+    u = lu['upper']
+    Det = u.diagonal().cumprod()[-1]
 
     return Det
 
