@@ -16,6 +16,7 @@ def rref(mat):
         # If the upper triangular is non-singular, then it can be reduced to a identity matrix.
         inv = inverse(upper)
         ref = np.identity(mat.shape[0])
+        
     except:
         pivot_row, pivot_col = upper.shape
         pivot_row -= 1
@@ -29,38 +30,24 @@ def rref(mat):
                 first_idx = idx[0]
                 upper[i, :] = upper[i, :]/upper[i, first_idx]
 
-
         # (4) Use elimination to get the simplest row echelon form matrix
-        def row_subtract(matrix, pivot_row):
+        def row_subtract(matrix, nrow, nonZero_idx):
 
-            this_row = matrix[pivot_row, :]
-            last_nonZero_idx = np.where(this_row != 0)[0][-1]
             E = np.identity(matrix.shape[0])
-            multiplier = matrix[:pivot_row, [last_nonZero_idx]] / matrix[pivot_row, last_nonZero_idx]
-            E[:pivot_row, [pivot_row]] = - multiplier
+            multiplier = matrix[:nrow, [nonZero_idx]] / matrix[nrow, nonZero_idx]
+            E[:nrow, [nrow]] = - multiplier
             matrix = E @ matrix
 
             return matrix
 
         ref = upper.copy()
-        while True:
-
-            if (np.abs(ref[pivot_row, :]) < 10**(-10)).all():
-                pivot_row -= 1
+        for i in range(1, pivot_row):
+            idx = np.where(upper[i, :] != 0)[0]
+            if idx.shape[0] == 0:
+                continue
             else:
-                # find the non-zero column in this row
-                # get multiplier and subtract
-                ref = row_subtract(ref, pivot_row)
-                pivot_row -= 1
-                pivot_col -= 1
+                first_idx = idx[0]
+                ref = row_subtract(ref, i, first_idx)
 
-            if pivot_row == 0 or pivot_col == 0:
-                break
 
     return ref
-
-
-if __name__ == '__main__':
-
-    mat = np.array([[1, 3, 3, 2], [2, 6, 9, 7], [-1, -3, 3, 4]])
-    ref = rref(mat)
