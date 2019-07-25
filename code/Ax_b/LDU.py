@@ -1,5 +1,5 @@
 import numpy as np
-from core.Ax_b.LU import LU_decompose
+from code.Ax_b.LU import LU_decompose
 
 def LDU_decompose(mat):
 
