@@ -1,5 +1,5 @@
 import numpy as np
-from core.Ax_b.nullSpace import getNullSpace
+from code.Ax_b.nullSpace import getNullSpace
 
 def rank(mat):
     # args:
