@@ -13,7 +13,7 @@ def getNullSpace(mat):
     # (2) Find column space and null space of ref
     nrow, ncol = ref.shape
     if nrow == ncol and (ref == np.identity(ref.shape[0])).all():
-        colspace = ref
+        colspace = mat
         nullspace = np.array([[0] * ref.shape[0]]).T
 
     else:
@@ -33,7 +33,7 @@ def getNullSpace(mat):
                 col_bool.append(False)
 
         col_bool = pd.Series(col_bool)
-        colspace = ref[:, col_bool]
+        colspace = mat[:, col_bool]
         pivot_col = list(col_bool[col_bool].index)
         free_col = list(col_bool[~col_bool].index)
 
