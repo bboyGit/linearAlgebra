@@ -1,9 +1,9 @@
 import numpy as np
+import pandas as pd
 from code.Ax_b.LU import LU_decompose
 from code.Ax_b.nullSpace import getNullSpace
 from code.Ax_b.Rref import rref
 from code.Ax_b.Inverse import inverse
-# The general special solution is not right, correct it !
 
 def ax_b(mat, b):
     # args:
@@ -14,17 +14,19 @@ def ax_b(mat, b):
     # (1) Deal with Exception and try if mat has unique solution
     if mat.shape[0] != b.shape[0]:
         raise Exception("The number of rows of mat must equal to that of b")
+    # (2) Check if it has unique solution
     try:
         inv = inverse(mat)
         solution = inv @ b
     except Exception:
 
-        # (2) Get homogeneous general solution
+        # (3) Get homogeneous general solution
         col_null = getNullSpace(mat)
         general_solution = col_null['null_space']
+        pivot_col = col_null['pivot_idx']
+        free_col = col_null['free_idx']
 
-        # (3) Get the may_special_solution v: where ref @ x = v and mat @ x = b
-        expand_mat = np.concatenate([mat, b], axis=1)
+        # (4) Get v: where ref @ x = v and mat @ x = b
         result = rref(mat)
         ref = result['rref']
         elementary2 = result['elementary']
@@ -36,16 +38,32 @@ def ax_b(mat, b):
                 E = elementary[i]
             else:
                 E = elementary[i] @ E
-        may_special_solution = E @ b
+        v = E @ b
 
-        # (4) Judge whether this linear system has solution or not
+        # (5) Judge whether this linear system has solution or not
         all_zero = [(ref[i, :] == 0).all() for i in range(len(ref))]
         all_zero_idx = np.where(all_zero)[0]
-        if (may_special_solution[all_zero_idx, :] != 0).any():
+        if (v[all_zero_idx, :] != 0).any():
             solution = None
             Warning("This linear system has no solution")
         else:
-            special_solution = may_special_solution
+            # (6) Find special_solution
+            expand = np.concatenate([ref, v], axis=1)
+            special_solution = {}
+            for i in range(ref.shape[0]):
+                the_row = ref[i, :]
+                nonzero = np.where(the_row != 0)[0]
+                if nonzero.shape[0] == 0:
+                    continue
+                else:
+                    nonzero_col = nonzero[0]
+                    special_solution[nonzero_col] = v[i, 0]
+            for j in free_col:
+                special_solution[j] = 0
+            special_solution = pd.DataFrame(special_solution, index=['sp_solution'])
+            special_solution = special_solution.reindex(columns=range(special_solution.shape[1]))
+            special_solution = special_solution.T
+
             solution = {"special_solution": special_solution, "general_solution": general_solution}
 
     return solution
