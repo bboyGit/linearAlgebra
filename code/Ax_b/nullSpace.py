@@ -8,7 +8,7 @@ def getNullSpace(mat):
     # return: A matrix whose columns are the basis of null space of mat
 
     # (1) Get the simplest reduced row echelon form matrix
-    ref = rref(mat)
+    ref = rref(mat)['rref']
 
     # (2) Find column space and null space of ref
     nrow, ncol = ref.shape
@@ -73,3 +73,9 @@ def getNullSpace(mat):
                 nullspace = pd.concat([nullspace, special_solution.T], axis=1)
 
     return {'null_space': nullspace, 'column_space': colspace}
+
+
+
+if __name__ == "__main__":
+    mat = np.array([[1, 3, 3, 2], [2, 6, 9, 7], [-1, -3, 3, 4]])
+    col_null = getNullSpace(mat)
