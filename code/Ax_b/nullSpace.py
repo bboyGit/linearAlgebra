@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from core.Ax_b.Rref import rref
+from code.Ax_b.Rref import rref
 
 def getNullSpace(mat):
     # args:
