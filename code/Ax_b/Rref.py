@@ -1,6 +1,6 @@
 import numpy as np
-from core.Ax_b.LU import LU_decompose
-from core.Ax_b.Inverse import inverse
+from code.Ax_b.LU import LU_decompose
+from code.Ax_b.Inverse import inverse
 
 def rref(mat):
     # args:
