@@ -1,2 +1,2 @@
 # linearAlgebra
-Rewrite classical linear algebra algorithms
+Rewrite classical linear algebra algorithms by numpy.
