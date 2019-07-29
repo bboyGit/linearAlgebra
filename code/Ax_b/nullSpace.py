@@ -15,7 +15,8 @@ def getNullSpace(mat):
     if nrow == ncol and (ref == np.identity(nrow)).all():
         colspace = np.identity(nrow)
         nullspace = np.array([[0] * ref.shape[0]]).T
-
+        pivot_col = list(range(ncol))
+        free_col = []
     else:
         col_bool = []
         df = pd.DataFrame(ref)
@@ -74,4 +75,3 @@ def getNullSpace(mat):
 
     return {'null_space': nullspace, 'column_space': colspace,
             'pivot_idx': pivot_col, 'free_idx': free_col}
-
