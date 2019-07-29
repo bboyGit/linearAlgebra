@@ -12,8 +12,8 @@ def getNullSpace(mat):
 
     # (2) Find column space and null space of ref
     nrow, ncol = ref.shape
-    if nrow == ncol and (ref == np.identity(ref.shape[0])).all():
-        colspace = mat
+    if nrow == ncol and (ref == np.identity(nrow)).all():
+        colspace = np.identity(nrow)
         nullspace = np.array([[0] * ref.shape[0]]).T
 
     else:
@@ -72,10 +72,6 @@ def getNullSpace(mat):
             else:
                 nullspace = pd.concat([nullspace, special_solution.T], axis=1)
 
-    return {'null_space': nullspace, 'column_space': colspace}
+    return {'null_space': nullspace, 'column_space': colspace,
+            'pivot_idx': pivot_col, 'free_idx': free_col}
 
-
-
-if __name__ == "__main__":
-    mat = np.array([[1, 3, 3, 2], [2, 6, 9, 7], [-1, -3, 3, 4]])
-    col_null = getNullSpace(mat)
