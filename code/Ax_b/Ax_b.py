@@ -4,6 +4,7 @@ from code.Ax_b.LU import LU_decompose
 from code.Ax_b.nullSpace import getNullSpace
 from code.Ax_b.Rref import rref
 from code.Ax_b.Inverse import inverse
+from warnings import warn
 
 def ax_b(mat, b):
     # args:
@@ -17,16 +18,17 @@ def ax_b(mat, b):
     # (2) Check if it has unique solution
     try:
         inv = inverse(mat)
+        # Unique solution
         solution = inv @ b
     except Exception:
-
+        # There's no unique solution
         # (3) Get homogeneous general solution
         col_null = getNullSpace(mat)
         general_solution = col_null['null_space']
         pivot_col = col_null['pivot_idx']
         free_col = col_null['free_idx']
 
-        # (4) Get v: where ref @ x = v and mat @ x = b
+        # (4) Get v: where ref @ x = v and mat @ x = b (cause E @ mat = ref, E @ b = v).
         result = rref(mat)
         ref = result['rref']
         elementary2 = result['elementary']
@@ -41,12 +43,14 @@ def ax_b(mat, b):
         v = E @ b
 
         # (5) Judge whether this linear system has solution or not
-        all_zero = [(ref[i, :] == 0).all() for i in range(len(ref))]
+        all_zero = [(ref[i, :] == 0).all() for i in range(ref.shape[0])]
         all_zero_idx = np.where(all_zero)[0]
         if (v[all_zero_idx, :] != 0).any():
+            # No solution
             solution = None
-            Warning("This linear system has no solution")
+            warn("This linear system has no solution")
         else:
+            # Infinite solution
             # (6) Find special_solution
             expand = np.concatenate([ref, v], axis=1)
             special_solution = {}
@@ -67,8 +71,3 @@ def ax_b(mat, b):
             solution = {"special_solution": special_solution, "general_solution": general_solution}
 
     return solution
-
-if __name__ == '__main__':
-    mat = np.array([[1, 3, 3, 2], [2, 6, 9, 7], [-1, -3, 3, 4]])
-    y = np.array([[1, 5, 5]]).T
-    solution = ax_b(mat, y)
