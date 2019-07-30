@@ -1,14 +1,17 @@
 import numpy as np
-from code.Ax_b.nullSpace import getNullSpace
+from core.Ax_b.LU import LU_decompose
 
 def rank(mat):
     # args:
     #   mat: A matrix
     # return: the rank of matrix
 
-    col_null = getNullSpace(mat)
-    colspace = col_null['column_space']
-    result = colspace.shape[1]
+    lu = LU_decompose(mat)
+    upper = lu['upper']
+    nrow, ncol = upper.shape
+    row_bool = [False if (upper[i, :] == 0).all() else True for i in range(nrow)]
+    u = upper[row_bool, :]
+    result = u.shape[0]
 
     return result
 
