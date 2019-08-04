@@ -1,5 +1,5 @@
 import numpy as np
-from code.Ax_b.LU import LU_decompose
+from core.Ax_b.LU import LU_decompose
 
 def inverse(mat):
     # args:
