@@ -1,6 +1,6 @@
 import numpy as np
-from code.Ax_b.Rank import rank
-from code.Ax_b.Inverse import inverse
+from core.Ax_b.Rank import rank
+from core.Ax_b.Inverse import inverse
 from warnings import warn
 
 def one_side_inverse(mat):
