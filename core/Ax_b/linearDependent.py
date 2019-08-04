@@ -1,5 +1,5 @@
 import numpy as np
-from code.Ax_b.nullSpace import getNullSpace
+from core.Ax_b.nullSpace import getNullSpace
 
 def linearDependent(mat):
     # Desc: check whether the coluumns of mat are linearly independent.
