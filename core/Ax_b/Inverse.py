@@ -11,6 +11,10 @@ def inverse(mat):
         raise Exception('The dimension of array must be 2')
 
     nrow, ncol = mat.shape
+    if nrow == ncol == 1:
+        warn('The mat has only 1 element')
+        return 1/mat
+    
     if nrow != ncol:
         raise Exception('The input matrix must be a square matrix')
 
