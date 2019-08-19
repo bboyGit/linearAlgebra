@@ -11,11 +11,13 @@ def det(mat):
         raise Exception('mat is not a square matrix.')
     lu = LU_decompose(mat)
     u = lu['upper']
-    Det = u.diagonal().cumprod()[-1]
+    num_exchange = lu['num_exchange']
+    sign = (-1)**num_exchange
+    Det = u.diagonal().cumprod()[-1] * sign
 
     return Det
 
 
 if __name__ == '__main__':
-    mat = np.array([[1, 3, 1], [3, 1, 4], [1, -4, 5]])
-    print(det(mat))
+    mat1 = np.array([[0, 1, 2], [1, 1, 3], [2, 0, 5]])
+    print(det(mat1))
