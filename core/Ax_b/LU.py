@@ -22,10 +22,12 @@ def LU_decompose(mat, only_upper=False, get_elementary=False):
     nrow, ncol = mat.shape
     pivot_row, pivot_col = 0, 0
     L, elementary = [], []
+    num_exchange = [0]
 
     # (2) Do the Gaussian elimination
     def row_exchange(pivot_row, pivot_col, matrix, only_upper):
 
+        num_exchange[0] += 1
         if not only_upper:
             pivots = matrix[pivot_row + 1:, [pivot_col]]
             nonZero1th_idx = np.where(pivots != 0)[0][0] + 1
@@ -88,6 +90,6 @@ def LU_decompose(mat, only_upper=False, get_elementary=False):
             lower = lower @ L[i]
         lower = lower.round(4)
         if get_elementary:
-            return {'upper': upper, 'lower': lower, 'elementary': elementary}
+            return {'upper': upper, 'lower': lower, 'elementary': elementary, 'num_exchange': num_exchange[0]}
         else:
-            return {'upper': upper, 'lower': lower}
+            return {'upper': upper, 'lower': lower, 'num_exchange': num_exchange[0]}
