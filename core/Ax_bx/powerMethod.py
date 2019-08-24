@@ -1,14 +1,15 @@
-# Desc: This script achieve the power method to calculate eigen value and eigen vector of a given matrix
 import numpy as np
 from core.Ax_b.Inverse import inverse
 
 def max_eigenvalue(mat, initial, iter_step):
-    # Desc: Solve the largest abs eigen value of a matrix by power method
-    # Args:
-    #   mat: A given matrix
-    #   initial: A column vector for the initial guess.
-    #   iter_step: A int indicating the number of iteration
-    # Return: eigen value and eigen vector
+    """
+    Desc: Solve the largest abs eigen value of a matrix by power method
+    Parameters:
+      mat: A given 2-D array
+      initial: A column vector for the initial guess.
+      iter_step: A int indicating the number of iteration
+    Return: max eigenvalue and the corresponding eigen-vector.
+    """
 
     # (1) Get the eigen vector which is corresponding to max eigen value
     mat = mat.copy()
@@ -27,12 +28,14 @@ def max_eigenvalue(mat, initial, iter_step):
     return result
 
 def power_method(mat, initial, step, iter_step):
-    # Desc: Get all the eigen value and eigen vector of a given matrix
-    # Args:
-    #   mat: The given matrix
-    #   initial: The first guess vector.
-    #   step: A int determining how many divisions we'd like to divide the potential range of all eigen values.
-    # Return: An array of eigen values.
+    '''
+    Desc: Get all the eigen value and eigen vector of a given matrix
+    Parameters:
+      mat: The given matrix
+      initial: The first guess vector.
+      step: A int determining how many divisions we'd like to divide the potential range of all eigen values.
+    Return: An array of eigenvalues
+    '''
 
     # (1) find the max and min eigen value of given matrix
     max_eig = max_eigenvalue(mat, initial, iter_step)
@@ -52,7 +55,7 @@ def power_method(mat, initial, step, iter_step):
         invmats_eigv = invmats_eig['eigen_value']
         mats_eigv = 1/invmats_eigv + s
         eigen_values.append(mats_eigv)
-    eigen_values = np.array(eigen_values).round(4)          # 注意：这是一个不稳定的地方，虽然随着eigen_range被分得越来越细，理论上我们可以得到所有的特征值。
+    eigen_values = np.array(eigen_values).round(3)          # 注意：这是一个不稳定的地方，虽然随着eigen_range被分得越来越细，理论上我们可以得到所有的特征值。
     eigen_values = np.unique(eigen_values)                  # 但这些特征值可能有相同的，但是我们无法完美地识别，因为你不知道从哪一个精度上round可以把所有重复值变成真的相同大小的值。这是幂迭代的一大弱点。
                                                             # 另一大弱点是当且仅当初始向量不与最大特征值对应的特征向量正交时才能找到最大特征值及其特征向量。
                                                             # 最后一大弱点是初始向量还必须在特征空间中。
@@ -63,4 +66,4 @@ if __name__ == '__main__':
     mat = np.array([[1, 0, -1/3], [0, 1, 2/3], [-1, 1, 1]])
     init = np.array([[1, 1, 1]]).T
     eigen = max_eigenvalue(mat, init, iter_step=50)
-    eigenv = power_method(mat, init, step=50, iter_step=50)
+    eigenv = power_method(mat, init, step=50, iter_step=100)
