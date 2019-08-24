@@ -3,11 +3,14 @@ from core.Ax_b.Inverse import inverse
 from core.Ax_b.Rank import rank
 
 def ols(x, y, const=True):
-    # Args:
-    #   x: A matrix contain explanatory variables
-    #   y: A column vector contain dependent variable
-    #   const: A bool, indicating whether we add constant or not. Default True, which means add constant.
-    # Return: A dict contain fitted values, coefficients and errors.
+    """
+    Desc: Do linear regression by OLS method.
+    Parameters:
+      x: A matrix contain explanatory variables
+      y: A column vector contain dependent variable
+      const: A bool, indicating whether we add constant or not. Default True, which means add constant.
+    Return: A dict contain fitted values, coefficients and errors.
+    """
 
     # (1) Handle Exceptions
     type_array = type(np.array([[0]]))
@@ -36,12 +39,15 @@ def ols(x, y, const=True):
     return result
 
 def wls(x, y, const=True, weight=None):
-    # Args:
-    #   x: A matrix contain explanatory variables
-    #   y: A column vector contain dependent variable
-    #   const: A bool, indicating whether we add constant or not. Default True, which means add constant.
-    #   weight: An 1 dimensional array. Default None.
-    # Return: A dict contain fitted values, coefficients, errors, weight, transfer x and transfer y..
+    """
+    Desc: Do linear regression by WLS method.
+    Parameters:
+      x: A matrix contain explanatory variables
+      y: A column vector contain dependent variable
+      const: A bool, indicating whether we add constant or not. Default True, which means add constant.
+      weight: An 1 dimensional array. Default None.
+    Return: A dict contain fitted values, coefficients, errors, weight, transfer x and transfer y.
+    """
 
     # (1) Handle Exceptions
     type_array = type(np.array([[0]]))
