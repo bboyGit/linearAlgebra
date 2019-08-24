@@ -1,16 +1,22 @@
 import numpy as np
 import pandas as pd
-from code.Ax_b.LU import LU_decompose
-from code.Ax_b.nullSpace import getNullSpace
-from code.Ax_b.Rref import rref
-from code.Ax_b.Inverse import inverse
+from core.Ax_b.LU import LU_decompose
+from core.Ax_b.nullSpace import getNullSpace
+from core.Ax_b.Rref import rref
+from core.Ax_b.Inverse import inverse
 from warnings import warn
 
 def ax_b(mat, b):
-    # args:
-    #   mat: A matrix
-    #   b: A column vector
-    # return: If no solution: Nones. Else if unique solution: columns vector. Else if infinite solution: dict.
+    """
+    Desc: Solve Ax=b.
+    Parameters:
+      mat: A matrix
+      b: A column vector
+    Return:
+        If no solution: return Nones.
+        Else if unique solution: return a columns vector.
+        Else if infinite solution: return a dict containing 2 dataframes, those are special solution and general solution.
+    """
 
     # (1) Deal with Exception and try if mat has unique solution
     if mat.shape[0] != b.shape[0]:
@@ -48,7 +54,7 @@ def ax_b(mat, b):
         if (v[all_zero_idx, :] != 0).any():
             # No solution
             solution = None
-            warn("This linear system has no solution")
+            warn("This linear system has no solution.")
         else:
             # Infinite solution
             # (6) Find special_solution
@@ -71,3 +77,13 @@ def ax_b(mat, b):
             solution = {"special_solution": special_solution, "general_solution": general_solution}
 
     return solution
+
+if __name__ == '__main__':
+    mat = np.array([[1, 3, 3, 2], [2, 6, 9, 7], [-1, -3, 3, 4]])
+    y1 = np.array([[1, 5, 5]]).T
+    y2 = np.array([[1, 5, 6]]).T
+    solution1 = ax_b(mat, y1)
+    solution2 = ax_b(mat, y2)
+
+    mat1 = np.array([[1, 2, 3], [1, 3, 3], [1, 2, 4]])
+    ax_b(mat1, np.array([[3, 9, 1]]).T)
