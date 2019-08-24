@@ -2,10 +2,14 @@ import numpy as np
 from core.Ax_b.LU import LU_decompose
 from core.Ax_b.Inverse import inverse
 
+
 def rref(mat):
-    # args:
-    #   mat: A matrix prepared to become simplest row echelon form matrix.
-    # return: A simplest row echelon form matrix.
+    """
+    Desc: Calculate the reduced row echelon form matrix by Gaussian elimination.
+    Parameters:
+      mat: A matrix prepared to become simplest row echelon form matrix.
+    Return: A simplest row echelon form matrix.
+    """
 
     # (1)get LU decomposition
     lu = LU_decompose(mat)
@@ -57,3 +61,4 @@ def rref(mat):
                 ref = row_subtract(ref, i, first_idx)
 
     return {"rref": ref, 'elementary': elementary}
+
