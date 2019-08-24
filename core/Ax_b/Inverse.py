@@ -3,9 +3,12 @@ from core.Ax_b.LU import LU_decompose
 from warnings import warn
 
 def inverse(mat):
-    # args:
-    #   mat: A matrix
-    # return: The inverse of mat
+    """
+    Desc: Calculate inverse matrix by Gauss-Jordan method.
+    Parameters:
+      mat: A 2-D array
+    Return: The inverse of mat
+    """
 
     # (1) Catch exceptions and initialize variables
     if mat.ndim != 2:
