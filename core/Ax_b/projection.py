@@ -1,22 +1,29 @@
-import numpy as np
 from core.Ax_b.Rank import rank
 from core.Ax_b.Inverse import inverse
 
 def project_mat(mat):
-
+    """
+    Desc: Generate projection matrix of given matrix.
+    parameters:
+     mat: A matrix 
+    return: The projection matrix. 
+    """
     r = rank(mat)
     if r != mat.shape[1]:
         raise Exception("The columns of mat is not linear independent")
-
-    proj = mat @ inverse(mat.T @ mat) @ mat.T
+    inv = inverse(mat.T @ mat)
+    proj = mat @ inv @ mat.T
 
     return proj
 
 def projection(v, obj_space):
-    # Args:
-    #   v: A column vector
-    #   obj_space: A matrix whose column vectors are the basis of a space
-    # Return: A column vector in space obj_space
+    """
+    Desc: Calculate projection of a given vector to a given space.
+    Parameters:
+      v: A column vector
+      obj_space: A matrix whose column vectors are the objective space.
+    Return: A column vector in space obj_space
+    """
 
     # (1) Deal exception and Get the projection matrix of obj_space
     proj = project_mat(obj_space)
@@ -34,8 +41,3 @@ def projection(v, obj_space):
 
     return v_hat
 
-if __name__ == '__main__':
-    y = np.array([[1, 2, 7]]).T
-    A = np.array([[1, 1], [1, -1], [-2, 4]])
-    project_mat(A)
-    projection(y, A)
