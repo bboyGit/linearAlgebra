@@ -2,9 +2,14 @@ import numpy as np
 from core.Ax_b.LU import LU_decompose
 
 def det(mat):
-    # args:
-    #   mat: A square matrix
-    # return: The determinant of matrix mat.
+    """
+    Desc: Calculate determinant by Gaussian elimination.
+          Det = (-1)^t * (a1a2...an), where a1 to an are pivots of U(from LU decomposition)
+          and t is the number of row exchange while LU decomposition.
+    Parameters:
+      mat: A square matrix
+    Return: The determinant of matrix mat.
+    """
 
     nrow, ncol = mat.shape
     if nrow != ncol:
