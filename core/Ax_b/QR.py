@@ -1,37 +1,18 @@
 import numpy as np
-from core.Ax_b.Rank import rank
+from core.Ax_b.orthogonal import ortho
 
 def qr_decompose(mat):
-    # Desc: This function achieve qr decomposition by Gram-schmidt process.
-    # Args:
-    #   mat: The matrix to do qr decomposition
-    # Return: The orthonormal matrix Q and corresponding upper triangle matrix R.
+    """
+    Desc: This function achieve qr decomposition by Gram-schmidt process.
+    Parameters:
+     mat: The matrix to do qr decomposition
+    return: The orthonormal matrix Q and corresponding upper triangle matrix R.
+    """
 
-    # (1) Deal exceptions
-    if not isinstance(mat, type(np.array([0]))):
-        raise Exception('mat must be an array')
-    if mat.ndim != 2:
-        raise Exception("Dimension of mat must be 2")
-
+    # (1) Do Gram-schmidt process to obtain Q
     nrow, ncol = mat.shape
-    r = rank(mat)
-    if r < ncol:
-        raise Exception("Columns of mat are not linearly independent.")
+    Q = ortho(mat, unit=True)
 
-    # (2) Do Gram-schmidt process to obtain Q
-    Q = []
-    for i in range(ncol):
-        col = mat[:, [i]]
-        if i == 0:
-            q = col/np.sqrt(np.dot(col.T, col))
-        else:
-            qi = np.concatenate(Q, axis=1)
-            proj = qi @ qi.T
-            orthogonal = col - proj @ col
-            q = orthogonal/np.sqrt(np.dot(orthogonal.T, orthogonal))
-        Q.append(q)
-
-    Q = np.concatenate(Q, axis=1)
     # (3) Obtain R by mat and Q
     R = []
     for j in range(ncol):
