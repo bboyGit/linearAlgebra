@@ -2,9 +2,12 @@ import numpy as np
 from core.Ax_b.LU import LU_decompose
 
 def rank(mat):
-    # args:
-    #   mat: A matrix
-    # return: the rank of matrix
+    """
+    Desc: Calculate rank of a given matrix by Gaussian elimination.
+    Parameters:
+      mat: A matrix
+    Return: the rank of matrix
+    """
 
     lu = LU_decompose(mat)
     upper = lu['upper']
@@ -17,4 +20,4 @@ def rank(mat):
 
 if __name__ == "__main__":
     mat = np.array([[1, 3, 3, 2], [2, 6, 9, 7], [-1, -3, 3, 4]])
-    r = rank(mat)
+    r = rank(mat.T)
