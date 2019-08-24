@@ -1,11 +1,16 @@
 import numpy as np
 from core.Ax_b.Rank import rank
 from core.Ax_b.Inverse import inverse
+from warnings import warn
 
 def ortho(mat, unit):
-    # Args:
-    #   mat: A matrix
-    #   unit: A bool indicating whether to scale each column to unit or not
+    """
+    Desc: Orthogonalize by Gram-Schmidt process.
+    Parameters:
+      mat: A matrix
+      unit: A bool indicating whether to scale each column to unit or not
+    Return: The matrix Q. If unit is False return a orthogonal matrix, else return a orthonormal matrix.
+    """
 
     # (1) Deal exceptions
     if not isinstance(mat, type(np.array([0]))):
@@ -15,8 +20,8 @@ def ortho(mat, unit):
 
     nrow, ncol = mat.shape
     r = rank(mat)
-    # if r < ncol:
-    #     raise Exception("Columns of mat are not linearly independent.")
+    if r < ncol:
+        warn("Columns of mat are not linearly independent.")
 
     # (2) Do Gram-schmidt process to obtain Q
     Q = []
