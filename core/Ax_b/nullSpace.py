@@ -1,19 +1,32 @@
 import numpy as np
 import pandas as pd
 from core.Ax_b.Rref import rref
+from core.Ax_b.Rank import rank
 
 def getNullSpace(mat):
-    # args:
-    #   mat: A matrix
-    # return: A matrix whose columns are the basis of null space of mat
+    """
+    Desc: Solve equation Ax=0 by Gaussian elimination.
+    Parameters:
+      mat: An 2-D array.
+    Return:
+        null space: A Dataframe whose columns are the basis of null space of mat
+        column space: A Dataframe whose columns are the basis of column space of mat
+        pivot_idx: A list of int indicating the column location of pivot variable of mat
+        free_idx: A list of int indicating the column location of free variable of mat
+    """
 
     # (1) Get the simplest reduced row echelon form matrix
     ref = rref(mat)['rref']
-
+    r = rank(ref)
     # (2) Find column space and null space of ref
     nrow, ncol = ref.shape
     if nrow == ncol and (ref == np.identity(nrow)).all():
         colspace = np.identity(nrow)
+        nullspace = np.array([[0] * ref.shape[0]]).T
+        pivot_col = list(range(ncol))
+        free_col = []
+    elif r == ncol:
+        colspace = mat
         nullspace = np.array([[0] * ref.shape[0]]).T
         pivot_col = list(range(ncol))
         free_col = []
@@ -38,7 +51,7 @@ def getNullSpace(mat):
         pivot_col = list(col_bool[col_bool].index)
         free_col = list(col_bool[~col_bool].index)
 
-        # (2.2) Iter each free variable to set it to 1 and other free variables to 0.
+        # (2.2) Iter each free variable to set it to 1 and Numerical free variables to 0.
 
         for sp_idx in range(len(free_col)):
             pivot_free1 = [1 if i in pivot_col or i == free_col[sp_idx] else 0 for i in range(df.shape[1])]
@@ -75,3 +88,10 @@ def getNullSpace(mat):
 
     return {'null_space': nullspace, 'column_space': colspace,
             'pivot_idx': pivot_col, 'free_idx': free_col}
+
+
+
+if __name__ == "__main__":
+    mat = np.array([[1, 3, 3, 2], [2, 6, 9, 7], [-1, -3, 3, 4]])
+    col_null = getNullSpace(mat)
+    col_null1 = getNullSpace(mat.T)
