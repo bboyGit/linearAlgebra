@@ -16,14 +16,15 @@ def max_eigenvalue(mat, initial, iter_step):
     pre = initial.copy()
     for i in range(iter_step):
         after = mat @ pre
-        after = after/np.sqrt(after.T @ after)
+        alpha = after[0]
+        after = after/alpha
         pre = after
     eigen_vector = after.copy()
     eigen_vector = eigen_vector/eigen_vector[0, 0]
 
     # (2) Get the max eigen value by least square
-    eigen_value = (eigen_vector.T @ mat @ eigen_vector) / (eigen_vector.T @ eigen_vector)
-    result = {'eigen_value': eigen_value[0, 0], 'eigen_vector': eigen_vector}
+    eigen_value = alpha
+    result = {'eigen_value': eigen_value[0], 'eigen_vector': eigen_vector}
 
     return result
 
