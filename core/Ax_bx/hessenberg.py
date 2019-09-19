@@ -1,4 +1,5 @@
 import numpy as np
+from warnings import warn
 
 def hessenberg(mat):
     """
@@ -7,12 +8,20 @@ def hessenberg(mat):
      mat: A square matrix.
     Return: A Hessenberg matrix
     """
+    # (1) Deal exception
     m = mat.copy()
     nrow, ncol = mat.shape
     if nrow != ncol:
         raise Exception('The input matrix must be square')
     n = nrow
 
+    zero_idx = np.where(mat > 10**(-10))
+    row, col = zero_idx
+    if all(col >= row):
+        warn("mat is a triangular matrix")
+        return mat
+
+    # (2) Use householder transformation to transfer mat into a hessenberg
     for i in range(n - 2):
         len_x = nrow - (i + 1)
         x = m[(i + 1):, i].reshape(len_x, 1)
@@ -25,9 +34,3 @@ def hessenberg(mat):
         m = U @ m @ U                    # Change the original matrix
 
     return m
-
-if __name__ == '__main__':
-    A = np.array([[1, 0, 1],
-                  [0, 1, 1],
-                  [1, 1, 0]])
-    hess = hessenberg(A)
