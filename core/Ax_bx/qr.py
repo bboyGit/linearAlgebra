@@ -35,7 +35,7 @@ def qr(mat, shift, step, hess=True, tol=10**(-8)):
         result = []
         while n > 1:
             count = 0
-            while count < tot_count and max(np.abs(a[:(n - 1), n-1])) > tol:
+            while count < tot_count and max(np.abs(a[n - 1, :(n-1)])) > tol:
                 const = a[n - 1, n - 1]
                 shift = const * np.identity(n)
                 qr = qr_decompose(a - shift)
