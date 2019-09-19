@@ -1,3 +1,4 @@
+
 import numpy as np
 from core.Ax_b.QR import qr_decompose
 from core.Ax_bx.hessenberg import hessenberg
@@ -31,7 +32,7 @@ def qr(mat, shift, step, hess=True, tol=10**(-8)):
         result = a.diagonal()
     else:
         # The shifted qr algorithm
-        tot_count = 500
+        tot_count = 30
         result = []
         while n > 1:
             count = 0
@@ -42,11 +43,14 @@ def qr(mat, shift, step, hess=True, tol=10**(-8)):
                 q = qr['q']
                 r = qr['r']
                 a = r @ q + shift
+                count += 1
             if count < tot_count:
                 lam = a[n - 1, n - 1]
                 result.append(lam)
                 n -= 1
                 a = a[:n, :n]
+                if n == 1:
+                    result.append(a[0, 0])
             else:
                 sub = a[(n - 2):, (n - 2):]
                 desc = (sub[0, 0] + sub[1, 1])**2 - 4 * (sub[0, 0] * sub[1, 1] - sub[0, 1] * sub[1, 0])
@@ -55,16 +59,8 @@ def qr(mat, shift, step, hess=True, tol=10**(-8)):
                 result.extend([lam1, lam2])
                 n -= 2
                 a = a[:n, :n]
-        result.append(a[0, 0])
+
         result = np.array(result)
     result = result[~np.isnan(result)]
 
     return result
-
-if __name__ == "__main__":
-    mat = np.array([[1, 2, 3, 6],
-                    [2, 4, 5, 0],
-                    [0, 3, 5, 2],
-                    [12, 0, 1.4, 5]])
-    eigval = qr(mat, shift=False, step=50, hess=True)
-    eigv = qr(mat, shift=True, step=30, hess=True, tol=10**(-10))
