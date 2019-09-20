@@ -15,13 +15,14 @@ def hessenberg(mat):
         raise Exception('The input matrix must be square')
     n = nrow
 
+    # (2) Check if it's already a hessenberg.
     zero_idx = np.where(mat > 10**(-10))
     row, col = zero_idx
-    if all(col >= row):
-        warn("mat is a triangular matrix")
+    if all(col >= row - 1):
+        warn("mat is already a Hessenberg matrix")
         return mat
 
-    # (2) Use householder transformation to transfer mat into a hessenberg
+    # (3) Use householder transformation to transfer mat into a hessenberg
     for i in range(n - 2):
         len_x = nrow - (i + 1)
         x = m[(i + 1):, i].reshape(len_x, 1)
