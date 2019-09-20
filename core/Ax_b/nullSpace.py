@@ -35,7 +35,7 @@ def getNullSpace(mat):
         df = pd.DataFrame(ref)
         # (2.1) Get the columns index of pivot_variable and free_variable
         for col in df:
-            the_col = df[col]
+            the_col = df[col].round(6)
             cond1 = set(the_col.unique()) == set([1, 0])
             cond2 = the_col[the_col == 1].shape[0] == 1
             if col == 0 and cond1 and cond2:
