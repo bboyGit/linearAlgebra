@@ -4,10 +4,12 @@ from core.Ax_b.Inverse import inverse
 from warnings import warn
 
 def one_side_inverse(mat):
-    # args:
-    #   mat: A matrix
-    # return: A dict with one piar-wise key-value. Key indicating which side the inverse is and value is the inverse matrix.
-
+    """
+    Desc: Calculate right or left inverse matrix
+    Parameters:
+      mat: A given matrix
+    Return: The one side inverse matrix
+    """
     try:
         inv = inverse(mat)
         warn("The matrix mat has two-side inverse")
